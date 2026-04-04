@@ -9,7 +9,7 @@ from datetime import datetime
 import webbrowser
 
 # ---------------------- CONFIG ----------------------
-APP_VERSION = "1.0.2"  # Update this when releasing a new version
+APP_VERSION = "1.0.3"  # Update this when releasing a new version
 PASSWORD = "ZackT"
 VERSION_URL = "https://raw.githubusercontent.com/ZekaryasT/DT_Activity_App/refs/heads/main/version.txt"
 UPDATE_PAGE_URL = "https://raw.githubusercontent.com/ZekaryasT/DT_Activity_App/refs/heads/main/dumptruck_app.py"
