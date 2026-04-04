@@ -6,9 +6,10 @@ from tkinter import filedialog, messagebox
 from openpyxl.styles import Font
 import requests
 from datetime import datetime
+import webbrowser
 
 # ---------------------- CONFIG ----------------------
-APP_VERSION = "1.0.2"
+APP_VERSION = "1.0.2"  # Update this when releasing a new version
 PASSWORD = "ZackT"
 VERSION_URL = "https://raw.githubusercontent.com/ZekaryasT/DT_Activity_App/refs/heads/main/version.txt"
 UPDATE_PAGE_URL = "https://raw.githubusercontent.com/ZekaryasT/DT_Activity_App/refs/heads/main/dumptruck_app.py"
@@ -40,8 +41,10 @@ def check_update():
     try:
         online_version = requests.get(VERSION_URL).text.strip()
         if online_version != APP_VERSION:
-            messagebox.showinfo("Update Available",
-                                f"New version {online_version} available!\nDownload it from:\n{UPDATE_PAGE_URL}")
+            # Ask user if they want to open the download page
+            if messagebox.askyesno("Update Available",
+                                   f"New version {online_version} available!\nDo you want to open the download page?"):
+                webbrowser.open(UPDATE_PAGE_URL)
         else:
             messagebox.showinfo("Up to Date", f"You are using the latest version ({APP_VERSION})")
     except Exception as e:
@@ -148,10 +151,10 @@ def main_app():
 
 # ---------------------- LOGIN GUI ----------------------
 login_window = tk.Tk()
-login_window.title("DT Activity Filtorer")
+login_window.title("Login")
 login_window.geometry("300x150")
 tk.Label(login_window, text="Enter Password:").pack(pady=10)
 password_entry = tk.Entry(login_window, show="*")
 password_entry.pack()
-tk.Button(login_window, text="Login\nDeveloped by Zackere", command=login).pack(pady=10)
+tk.Button(login_window, text="Login", command=login).pack(pady=10)
 login_window.mainloop()
