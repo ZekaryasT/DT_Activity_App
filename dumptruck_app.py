@@ -178,7 +178,7 @@ def main_app():
 
 # ---------------------- LOGIN GUI ----------------------
 login_window = tk.Tk()
-login_window.title("Login")
+login_window.title("DT Activity Filterer")
 login_window.geometry("300x150")
 tk.Label(login_window, text="Enter Password:").pack(pady=10)
 password_entry = tk.Entry(login_window, show="*")
