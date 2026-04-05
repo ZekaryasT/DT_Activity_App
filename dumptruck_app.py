@@ -9,7 +9,7 @@ from datetime import datetime
 import webbrowser
 
 # ---------------------- CONFIG ----------------------
-APP_VERSION = "1.0.6"  # Update this when releasing a new version
+APP_VERSION = "1.0.2"  # Update this when releasing a new version
 PASSWORD = "ZackT"
 VERSION_URL = "https://raw.githubusercontent.com/ZekaryasT/DT_Activity_App/refs/heads/main/version.txt"
 UPDATE_PAGE_URL = "https://raw.githubusercontent.com/ZekaryasT/DT_Activity_App/refs/heads/main/dumptruck_app.py"
@@ -37,14 +37,14 @@ def login():
             messagebox.showerror("Incorrect Password", f"Wrong password! {remaining} tries left.")
 
 # ---------------------- UPDATE CHECK ----------------------
-def show_update_window(url, new_version):
+def show_update_window_silent(new_version):
     def open_update():
-        webbrowser.open(url)
+        webbrowser.open(UPDATE_PAGE_URL)  # silently opens GitHub release page
         win.destroy()
 
     win = tk.Toplevel()
     win.title(f"Check Update (v{APP_VERSION})")
-    win.geometry("460x180")
+    win.geometry("400x140")
     win.resizable(False, False)
 
     tk.Label(
@@ -61,33 +61,16 @@ def show_update_window(url, new_version):
 
     button_frame = tk.Frame(win)
     button_frame.pack(pady=10)
-
     tk.Button(button_frame, text="Yes", command=open_update, bg="green", fg="white", width=10).pack(side="left", padx=10)
     tk.Button(button_frame, text="No", command=win.destroy, bg="red", fg="white", width=10).pack(side="right", padx=10)
 
-    # Copyable URL
-    url_entry = tk.Entry(win, width=60)
-    url_entry.insert(0, url)
-    url_entry.config(state="readonly")
-    url_entry.pack(pady=5)
-
-    def copy_url():
-        win.clipboard_clear()
-        win.clipboard_append(url)
-        win.update()
-
-    tk.Button(win, text="Copy Link", command=copy_url).pack(pady=4)
-
-def check_update():
+def check_update_silent():
     try:
         online_version = requests.get(VERSION_URL, timeout=10).text.strip()
         if online_version != APP_VERSION:
-            show_update_window(UPDATE_PAGE_URL, online_version)
+            show_update_window_silent(online_version)
         else:
-            messagebox.showinfo(
-                f"Check Update (v{APP_VERSION})",
-                f"You are using the latest version ({APP_VERSION})."
-            )
+            messagebox.showinfo(f"Check Update (v{APP_VERSION})", f"You are using the latest version ({APP_VERSION}).")
     except Exception as e:
         messagebox.showerror("Update Check Failed", f"Could not check for updates.\n{e}")
 
@@ -186,7 +169,7 @@ def main_app():
     tk.Button(root, text="Process File", command=process_file, bg="green", fg="white").pack(pady=10)
 
     # Update button
-    tk.Button(root, text=f"Check Update (v{APP_VERSION})", command=check_update).pack(pady=5)
+    tk.Button(root, text=f"Check Update (v{APP_VERSION})", command=check_update_silent).pack(pady=5)
 
     # Current version label
     tk.Label(root, text=f"Current Version: {APP_VERSION}").pack(side="bottom", pady=5)
