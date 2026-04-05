@@ -9,7 +9,7 @@ from datetime import datetime
 import webbrowser
 
 # ---------------------- CONFIG ----------------------
-APP_VERSION = "1.0.4"  # Update this when releasing a new version
+APP_VERSION = "1.0.2"  # Update this when releasing a new version
 PASSWORD = "ZackT"
 VERSION_URL = "https://raw.githubusercontent.com/ZekaryasT/DT_Activity_App/refs/heads/main/version.txt"
 UPDATE_PAGE_URL = "https://raw.githubusercontent.com/ZekaryasT/DT_Activity_App/refs/heads/main/dumptruck_app.py"
@@ -39,27 +39,46 @@ def login():
 # ---------------------- CLICKABLE UPDATE POPUP ----------------------
 def show_update_link(url, new_version):
     win = tk.Toplevel()
-    win.title("Update Available")
-    win.geometry("400x120")
-    
-    tk.Label(win, text=f"New version {new_version} is available!", font=("Arial", 12, "bold")).pack(pady=10)
-    
-    link = tk.Label(win, text=url, fg="blue", cursor="hand2")
-    link.pack(pady=5)
-    
-    # Make the link clickable
-    link.bind("<Button-1>", lambda e: webbrowser.open(url))
-    
-    tk.Button(win, text="Close", command=win.destroy).pack(pady=10)
+    win.title(f"Check Update (v{APP_VERSION})")
+    win.geometry("420x160")
+    win.resizable(False, False)
+
+    tk.Label(
+        win,
+        text=f"A new version {new_version} is available!",
+        font=("Arial", 12, "bold")
+    ).pack(pady=10)
+
+    tk.Label(
+        win,
+        text="Click the button below to open the download page:",
+    ).pack(pady=5)
+
+    tk.Button(
+        win,
+        text="Open Update Page",
+        command=lambda: webbrowser.open(url),
+        bg="blue",
+        fg="white",
+        padx=10,
+        pady=5
+    ).pack(pady=8)
+
+    entry = tk.Entry(win, width=55)
+    entry.insert(0, url)
+    entry.config(state="readonly")
+    entry.pack(pady=5)
+
+    tk.Button(win, text="Close", command=win.destroy).pack(pady=5)
 
 # ---------------------- UPDATE CHECK ----------------------
 def check_update():
     try:
-        online_version = requests.get(VERSION_URL).text.strip()
+        online_version = requests.get(VERSION_URL, timeout=10).text.strip()
         if online_version != APP_VERSION:
             show_update_link(UPDATE_PAGE_URL, online_version)
         else:
-            messagebox.showinfo("Up to Date", f"You are using the latest version ({APP_VERSION})")
+            messagebox.showinfo(f"Check Update (v{APP_VERSION})", f"You are using the latest version ({APP_VERSION})")
     except Exception as e:
         messagebox.showerror("Update Check Failed", f"Could not check for updates.\n{e}")
 
