@@ -36,49 +36,58 @@ def login():
         else:
             messagebox.showerror("Incorrect Password", f"Wrong password! {remaining} tries left.")
 
-# ---------------------- CLICKABLE UPDATE POPUP ----------------------
-def show_update_link(url, new_version):
+# ---------------------- UPDATE CHECK ----------------------
+def show_update_window(url, new_version):
+    def open_update():
+        webbrowser.open(url)
+        win.destroy()
+
     win = tk.Toplevel()
     win.title(f"Check Update (v{APP_VERSION})")
-    win.geometry("420x160")
+    win.geometry("460x180")
     win.resizable(False, False)
 
     tk.Label(
         win,
-        text=f"A new version {new_version} is available!",
+        text=f"A new version {new_version} is available.",
         font=("Arial", 12, "bold")
     ).pack(pady=10)
 
     tk.Label(
         win,
-        text="Click the button below to open the download page:",
+        text="Do you want to update the app?",
+        font=("Arial", 10)
     ).pack(pady=5)
 
-    tk.Button(
-        win,
-        text="Open Update Page",
-        command=lambda: webbrowser.open(url),
-        bg="blue",
-        fg="white",
-        padx=10,
-        pady=5
-    ).pack(pady=8)
+    button_frame = tk.Frame(win)
+    button_frame.pack(pady=10)
 
-    entry = tk.Entry(win, width=55)
-    entry.insert(0, url)
-    entry.config(state="readonly")
-    entry.pack(pady=5)
+    tk.Button(button_frame, text="Yes", command=open_update, bg="green", fg="white", width=10).pack(side="left", padx=10)
+    tk.Button(button_frame, text="No", command=win.destroy, bg="red", fg="white", width=10).pack(side="right", padx=10)
 
-    tk.Button(win, text="Close", command=win.destroy).pack(pady=5)
+    # Copyable URL
+    url_entry = tk.Entry(win, width=60)
+    url_entry.insert(0, url)
+    url_entry.config(state="readonly")
+    url_entry.pack(pady=5)
 
-# ---------------------- UPDATE CHECK ----------------------
+    def copy_url():
+        win.clipboard_clear()
+        win.clipboard_append(url)
+        win.update()
+
+    tk.Button(win, text="Copy Link", command=copy_url).pack(pady=4)
+
 def check_update():
     try:
         online_version = requests.get(VERSION_URL, timeout=10).text.strip()
         if online_version != APP_VERSION:
-            show_update_link(UPDATE_PAGE_URL, online_version)
+            show_update_window(UPDATE_PAGE_URL, online_version)
         else:
-            messagebox.showinfo(f"Check Update (v{APP_VERSION})", f"You are using the latest version ({APP_VERSION})")
+            messagebox.showinfo(
+                f"Check Update (v{APP_VERSION})",
+                f"You are using the latest version ({APP_VERSION})."
+            )
     except Exception as e:
         messagebox.showerror("Update Check Failed", f"Could not check for updates.\n{e}")
 
