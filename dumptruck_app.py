@@ -9,7 +9,7 @@ import requests
 from datetime import datetime
 
 # ---------------------- CONFIG ----------------------
-APP_VERSION = "2.1.0"  # Bump this AND version.txt together for every release
+APP_VERSION = "4.1.0"  # Bump this AND version.txt together for every release
 
 # --- GitHub repo that hosts your compiled releases ---
 GITHUB_OWNER = "ZekaryasT"
